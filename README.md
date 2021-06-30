@@ -24,7 +24,7 @@ pom.xml
 
 ## Info
 The library contains:
-* MySQL management (Database class, Utils, SQLStorage and more)
+* MySQL management (Database class, SQLUtil, SQLStorage and more)
 * Debug utils
 * Easy Cooldowns Management (Cooldown class)
 * Small class FileUtil
@@ -68,7 +68,7 @@ pom.xml
 
 ## Информация
 Библиотека содержит:
-* Управление MySQL (Database class, Utils, SQLStorage и прочее)
+* Управление MySQL (Database class, SQLUtil, SQLStorage и прочее)
 * Инструменты Debug
 * Легкое управление Cooldowns (Cooldown class)
 * Небольшой class FileUtil
