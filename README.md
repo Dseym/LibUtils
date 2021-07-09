@@ -17,7 +17,7 @@ pom.xml
   <dependency>
 	<groupId>ru.dseymo.libutils</groupId>
 	<artifactId>LibUtils</artifactId>
-	<version>1.0</version>
+	<version>1.1</version>
   </dependency>
 </dependencies>
 ```
@@ -34,6 +34,7 @@ The library contains:
   * Board
   * BossBar for 1.8
   * Packets 1.8-1.17
+  * Hologram
   * Menu
   * Command/ExtendCommand (With TabComplete)
   * Config
@@ -46,7 +47,7 @@ The library contains:
 
 
 # RUS
-## Using
+## Использование
 Вы можете использовать эту библиотеку в своем проекте с помощью Maven.
 pom.xml
 ```xml
@@ -61,7 +62,7 @@ pom.xml
   <dependency>
 	<groupId>ru.dseymo.libutils</groupId>
 	<artifactId>LibUtils</artifactId>
-	<version>1.0</version>
+	<version>1.1</version>
   </dependency>
 </dependencies>
 ```
@@ -78,6 +79,7 @@ pom.xml
   * Board
   * BossBar for 1.8
   * Packets 1.8-1.17
+  * Hologram
   * Menu
   * Command/ExtendCommand(With TabComplete)
   * Config
