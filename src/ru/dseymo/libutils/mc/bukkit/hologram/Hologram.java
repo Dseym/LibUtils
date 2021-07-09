@@ -14,8 +14,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import lombok.Setter;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityLiving;
 import ru.dseymo.libutils.mc.bukkit.MCUtil;
 import ru.dseymo.libutils.mc.bukkit.packet.PacketFactory;
+import ru.dseymo.libutils.mc.bukkit.packet.PacketFactory1_17;
+import ru.dseymo.libutils.mc.bukkit.packet.ProtocolVer;
 
 public class Hologram implements Listener {
 	public static int INDENT = 23;
@@ -28,9 +32,9 @@ public class Hologram implements Listener {
 	}
 	
 	
-	private ArrayList<UUID> uuids = new ArrayList<>();
-	private ArrayList<HologramLine> lines = new ArrayList<>();
-	private Location loc;
+	ArrayList<UUID> uuids = new ArrayList<>();
+	ArrayList<IHologramLine> lines = new ArrayList<>();
+	Location loc;
 	@Setter
 	private boolean reloadForAll;
 	
@@ -80,20 +84,39 @@ public class Hologram implements Listener {
 	}
 	
 	
-	public HologramLine getLine(int index) {
-		if(index+1 > lines.size())
-			return null;
+	public void setLocation(Location loc) {
+		this.loc = loc;
+		int i = 0;
 		
-		return lines.get(index);
+		for(IHologramLine line: lines) {
+			IHologramLine lastLine = null;
+			
+			if(i != 0)
+				lastLine = lines.get(i-1);
+			
+			i++;
+			
+			line.setLocation(lastLine != null ? lastLine.getLocation().add(0, -((double)INDENT/100.0), 0) : loc);
+		}
+	}
+	
+	public void setText(int index, String text) {
+		if(index+1 <= lines.size())
+			lines.get(index);
+	}
+	
+	public int getSize() {
+		return lines.size();
 	}
 	
 	public void addLines(String...texts) {
 		for(String line: texts) {
-			HologramLine lastLine = null;
+			IHologramLine lastLine = null;
+			
 			if(lines.size() != 0)
 				lastLine = lines.get(lines.size()-1);
 			
-			lines.add(new HologramLine(line, lastLine != null ? lastLine.loc.add(0, -((double)INDENT/100.0), 0) : loc));
+			lines.add(new HologramLine(line, lastLine != null ? lastLine.getLocation().add(0, -((double)INDENT/100.0), 0) : loc));
 		}
 	}
 	
@@ -101,7 +124,11 @@ public class Hologram implements Listener {
 		if(index+1 > lines.size())
 			return;
 		
-		PacketFactory.destroyEntities(MCUtil.getEntityId(lines.get(index).stand)).sendAll();
+		if(ProtocolVer.v1_17.isThatOrNewest())
+			PacketFactory1_17.destroyEntities(index);
+		else
+			PacketFactory.destroyEntities(MCUtil.getEntityId(lines.get(index).getStand())).sendAll();
+		
 		lines.remove(index);
 	}
 	
@@ -113,8 +140,8 @@ public class Hologram implements Listener {
 	public void removePlayer(Player p) {
 		if(!contains(p)) return;
 		uuids.remove(p.getUniqueId());
-		for(HologramLine line: lines)
-			PacketFactory.destroyEntities(MCUtil.getEntityId(line.stand)).send(p);
+		for(IHologramLine line: lines)
+			PacketFactory.destroyEntities(MCUtil.getEntityId(line.getStand())).send(p);
 	}
 	
 	public boolean contains(Player p) {
@@ -122,12 +149,18 @@ public class Hologram implements Listener {
 	}
 	
 	public void update() {
-		for(HologramLine line: lines)
+		for(IHologramLine line: lines)
 			for(UUID uuid: uuids) {
-				PacketFactory.spawnEntityLiving(line.stand).send(Bukkit.getPlayer(uuid));
-				PacketFactory.entityMetadata(line.stand, MCUtil.getEntityId(line.stand)).send(Bukkit.getPlayer(uuid));
+				if(ProtocolVer.v1_17.isThatOrNewest()) {
+					PacketFactory1_17.spawnEntityLiving((EntityLiving)line.getStand()).send(Bukkit.getPlayer(uuid));
+					PacketFactory1_17.entityMetadata((Entity)line.getStand(), MCUtil.getEntityId(line.getStand())).send(Bukkit.getPlayer(uuid));
+				} else {
+					PacketFactory.spawnEntityLiving(line.getStand()).send(Bukkit.getPlayer(uuid));
+					PacketFactory.entityMetadata(line.getStand(), MCUtil.getEntityId(line.getStand())).send(Bukkit.getPlayer(uuid));
+				}
 			}
 	}
+	
 	
 	@EventHandler
 	public void quit(PlayerQuitEvent e) {removePlayer(e.getPlayer());}

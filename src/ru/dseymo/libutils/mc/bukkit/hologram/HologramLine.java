@@ -8,7 +8,7 @@ import ru.dseymo.libutils.mc.bukkit.ColorUtil;
 import ru.dseymo.libutils.mc.bukkit.MCUtil;
 import ru.dseymo.libutils.mc.bukkit.packet.ProtocolVer;
 
-public class HologramLine {
+public class HologramLine implements IHologramLine {
 	
 	Object stand;
 	Location loc;
@@ -29,7 +29,25 @@ public class HologramLine {
 		
 		setLocation(loc);
 	}
-	
+
+	@Override
+	public Location getLocation() {
+		return loc;
+	}
+
+	@Override
+	public Object getStand() {
+		return stand;
+	}
+
+	@Override
+	public void setLocation(Location loc) {
+		this.loc = loc;
+		
+		ReflUtil.invoke(stand, "setLocation", new Class[] {double.class, double.class, double.class, float.class, float.class}, loc.getX(), loc.getY(), loc.getZ(), 0, 0);
+	}
+
+	@Override
 	public void setText(String text) {
 		text = ColorUtil.color(text);
 		
@@ -39,12 +57,6 @@ public class HologramLine {
 							MCUtil.createChatComponentText(text));
 		} else
 			ReflUtil.invoke(stand, "setCustomName", new Class[] {String.class}, text);
-	}
-	
-	void setLocation(Location loc) {
-		this.loc = loc;
-		
-		ReflUtil.invoke(stand, "setLocation", new Class[] {double.class, double.class, double.class, float.class, float.class}, loc.getX(), loc.getY(), loc.getZ(), 0, 0);
 	}
 	
 }

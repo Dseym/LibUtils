@@ -4,12 +4,18 @@ import org.bukkit.entity.Player;
 
 import ru.dseymo.libutils.mc.bukkit.packet.PacketFactory;
 import ru.dseymo.libutils.mc.bukkit.packet.PacketFactory.TitleAction;
+import ru.dseymo.libutils.mc.bukkit.packet.PacketFactory1_17;
+import ru.dseymo.libutils.mc.bukkit.packet.ProtocolVer;
 
 public class Title {
 	
 	public static void send(Player p, String title, String subTitle, int fadeIn, int stay, int fadeOut) {
-		PacketFactory.title(TitleAction.TITLE, ColorUtil.color(title), fadeIn, stay, fadeOut).send(p);
-		PacketFactory.title(TitleAction.SUBTITLE, ColorUtil.color(subTitle), fadeIn, stay, fadeOut).send(p);
+		if(ProtocolVer.v1_17.isThatOrNewest())
+			PacketFactory1_17.title(title, subTitle, fadeIn, stay, fadeOut).send(p);
+		else {
+			PacketFactory.title(TitleAction.TITLE, ColorUtil.color(title), fadeIn, stay, fadeOut).send(p);
+			PacketFactory.title(TitleAction.SUBTITLE, ColorUtil.color(subTitle), fadeIn, stay, fadeOut).send(p);
+		}
 	}
 	
 	public static void send(Player p, String title, int fadeIn, int stay, int fadeOut) {
@@ -25,11 +31,17 @@ public class Title {
 	}
 	
 	public static void clear(Player p) {
-		PacketFactory.title(TitleAction.CLEAR, "", 0, 0, 0).send(p);
+		if(ProtocolVer.v1_17.isThatOrNewest())
+			PacketFactory1_17.resetTitle().send(p);
+		else
+			PacketFactory.title(TitleAction.CLEAR, "", 0, 0, 0).send(p);
 	}
 	
 	public static void sendActionBar(Player p, String text) {
-		PacketFactory.actionBar(ColorUtil.color(text)).send(p);
+		if(ProtocolVer.v1_17.isThatOrNewest())
+			PacketFactory1_17.actionBar(text).send(p);
+		else
+			PacketFactory.actionBar(ColorUtil.color(text)).send(p);
 	}
 	
 }
