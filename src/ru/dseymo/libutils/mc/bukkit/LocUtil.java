@@ -10,6 +10,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 
 public class LocUtil {
+	public static final Location ZERO = new Location(Bukkit.getWorlds().get(0), 0, 0, 0);
 	
 	public static String toString(Location loc, boolean exactLoc, boolean rotate) {
 		if(loc == null)
