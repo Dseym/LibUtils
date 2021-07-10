@@ -102,7 +102,14 @@ public class Hologram implements Listener {
 	
 	public void setText(int index, String text) {
 		if(index+1 <= lines.size())
-			lines.get(index);
+			lines.get(index).setText(text);
+	}
+	
+	public String getText(int index) {
+		if(index+1 <= lines.size())
+			return lines.get(index).getText();
+		else
+			return null;
 	}
 	
 	public int getSize() {

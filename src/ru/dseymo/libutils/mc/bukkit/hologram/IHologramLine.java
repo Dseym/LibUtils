@@ -12,4 +12,6 @@ public interface IHologramLine {
 	
 	void setText(String text);
 	
+	String getText();
+	
 }

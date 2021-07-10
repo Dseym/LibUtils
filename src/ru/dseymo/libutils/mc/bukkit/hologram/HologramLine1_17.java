@@ -49,4 +49,9 @@ public class HologramLine1_17 implements IHologramLine {
 		stand.setCustomName(new ChatComponentText(ColorUtil.color(text)));
 	}
 	
+	@Override
+	public String getText() {
+		return stand.getCustomName().getText();
+	}
+	
 }

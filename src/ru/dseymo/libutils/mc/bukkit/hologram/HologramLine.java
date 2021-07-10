@@ -59,4 +59,12 @@ public class HologramLine implements IHologramLine {
 			ReflUtil.invoke(stand, "setCustomName", new Class[] {String.class}, text);
 	}
 	
+	@Override
+	public String getText() {
+		if(ProtocolVer.v1_13.isThatOrNewest()) {
+			return (String)ReflUtil.invoke(ReflUtil.invoke(stand, "getCustomName"), "getText");
+		} else
+			return (String)ReflUtil.invoke(stand, "getCustomName");
+	}
+	
 }
