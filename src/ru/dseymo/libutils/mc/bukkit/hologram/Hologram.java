@@ -51,7 +51,10 @@ public class Hologram implements Listener {
 						uuids.add(p.getUniqueId());
 					
 					Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-						for(Hologram holo: HOLOGRAMS) {
+						for(Hologram holo: new ArrayList<>(HOLOGRAMS)) {
+							if(holo == null)
+								continue;
+							
 							if(holo.reloadForAll)
 								holo.uuids = new ArrayList<>(uuids);
 							
